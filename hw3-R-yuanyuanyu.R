@@ -49,17 +49,18 @@ ggplot(new_df3,aes(x=age))+geom_histogram(fill='lightblue',color='black')
 ggplot(new_df3,aes(x=age,y=mean_n_score))+geom_histogram(fill='lightblue',color='black')
 
 
-#test1
-completion_counts <- df %>%
-  group_by(test.preparation.course) %>%  # group by gender
-  count()
-completion_counts
-completion_counts <- completion_counts %>%  
-  mutate(label = paste((n/sum(completion_counts$n)*100), '%', sep = ''))  
-dp<-ggplot(completion_counts, aes(x='', y=n, fill=test.preparation.course))+
-  geom_bar(stat="identity", width=1, color="white") +
-  geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="white") +
-  coord_polar("y", start=0) +
-  ggtitle("completion ratio")+
-  theme_void()
-print(dp)  #completed 33.5%, none 66.5%
+#test2
+student_parentlevel <- df %>%
+  group_by(parental.level.of.education) %>%  # group the dataset by race_ethnicity
+  summarise(y = n(), .groups='rowwise')  # count the number ob observations
+View(student_parentlevel)
+colnames(student_parentlevel)
+student_parentlevel1<-student_parentlevel[order(student_parentlevel$y, decreasing = T),]
+dp1<-ggplot(student_parentlevel1,aes(x =parental.level.of.education , y =y, fill=parental.level.of.education)) +
+  geom_bar(stat = "identity",color='white') +
+  geom_text(aes(label=y), color="white", size=5, position=position_stack(vjust=0.5)) + 
+  ggtitle("Number of students by different levels of parental education") + # title 
+  xlab("different levels of parental education") + 
+  ylab("Number of students")+
+  theme_minimal()
+print(dp1)#the largest group is some college has 222 students
