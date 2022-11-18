@@ -49,4 +49,17 @@ ggplot(new_df3,aes(x=age))+geom_histogram(fill='lightblue',color='black')
 ggplot(new_df3,aes(x=age,y=mean_n_score))+geom_histogram(fill='lightblue',color='black')
 
 
-
+#test1
+completion_counts <- df %>%
+  group_by(test.preparation.course) %>%  # group by gender
+  count()
+completion_counts
+completion_counts <- completion_counts %>%  
+  mutate(label = paste((n/sum(completion_counts$n)*100), '%', sep = ''))  
+dp<-ggplot(completion_counts, aes(x='', y=n, fill=test.preparation.course))+
+  geom_bar(stat="identity", width=1, color="white") +
+  geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="white") +
+  coord_polar("y", start=0) +
+  ggtitle("completion ratio")+
+  theme_void()
+print(dp)  #completed 33.5%, none 66.5%
