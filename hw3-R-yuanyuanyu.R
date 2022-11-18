@@ -49,6 +49,21 @@ ggplot(new_df3,aes(x=age))+geom_histogram(fill='lightblue',color='black')
 ggplot(new_df3,aes(x=age,y=mean_n_score))+geom_histogram(fill='lightblue',color='black')
 
 
+#test1
+completion_counts <- df %>%
+  group_by(test.preparation.course) %>%  # group by gender
+  count()
+completion_counts
+completion_counts <- completion_counts %>%  
+  mutate(label = paste((n/sum(completion_counts$n)*100), '%', sep = ''))  
+dp<-ggplot(completion_counts, aes(x='', y=n, fill=test.preparation.course))+
+  geom_bar(stat="identity", width=1, color="white") +
+  geom_text(aes(label = label), position = position_stack(vjust = 0.5), color="white") +
+  coord_polar("y", start=0) +
+  ggtitle("completion ratio")+
+  theme_void()
+print(dp)  #completed 33.5%, none 66.5%
+
 #test2
 student_parentlevel <- df %>%
   group_by(parental.level.of.education) %>%  # group the dataset by race_ethnicity
@@ -64,3 +79,29 @@ dp1<-ggplot(student_parentlevel1,aes(x =parental.level.of.education , y =y, fill
   ylab("Number of students")+
   theme_minimal()
 print(dp1)#the largest group is some college has 222 students
+
+#test3
+library(tidyr)
+df_longer <- df %>% 
+  pivot_longer(c(math.score, reading.score, writing.score),
+               names_to = 'test', values_to = 'score')
+View(df_longer)
+colnames(df_longer)
+str(df_longer)
+dp2<-ggplot(df_longer,aes(x=test.preparation.course, y=score,fill=test)) + 
+  geom_boxplot() +
+  ggtitle("Distribution of student tests scores") +
+  xlab("test.preparation.course") + 
+  ylab("Score") +
+  theme_bw()
+print(dp2)
+
+
+dp3<-ggplot(df_longer,aes(x=test.preparation.course, y=score,fill=test)) + 
+  geom_boxplot() +
+  ggtitle("Distribution of student tests scores") +
+  xlab("test.preparation.course") + 
+  ylab("Score") +
+  theme_bw()+
+  facet_wrap(~test.preparation.course)
+print(dp3)
